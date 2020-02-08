@@ -16,7 +16,8 @@ extern char **environ;
 
 
 int GetNumofVals(char** initialarglist);
-void AddVarstoArr(char** valsarr, char** initialarglist, int varcount,int offset);
+void AddVarstoArr(char** valsarr, char** initialarglist, int varcount,
+														int offset);
 void CopyValstoEnviron(char** valsarr,int numofvars,int environsize);
 void DisplayEnv(void);
 void FreeValsArr(char** valsarr,int arrsize);
