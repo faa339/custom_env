@@ -5,7 +5,6 @@ Description: This is an implementation of the
 utility env. Providing arguments adds them onto 
 the end of environ. Usage is:
 ./env [name=value]...[command [args...]]
-Failure in execution is 
 */
 
 #include <stdio.h>
