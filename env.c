@@ -4,7 +4,7 @@ Author: Faris Alotaibi
 Description: This is an implementation of the 
 utility env. Providing arguments adds them onto 
 the end of environ. Usage is:
-./env [name=value]...[command [args...]]
+./env [name=value]...[command [args]...]
 */
 
 #include <stdio.h>
