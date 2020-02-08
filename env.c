@@ -16,12 +16,12 @@ extern char **environ;
 
 
 int GetNumofVals(char** initialarglist);
-void AddVarstoArr(char** valsarr, char** initialarglist, int varcount,
-														int offset);
+void AddVarstoArr(char** valsarr,char** initialarglist,
+	int varcount,int offset);
 void CopyValstoEnviron(char** valsarr,int numofvars,int environsize);
 void DisplayEnv(void);
 void FreeValsArr(char** valsarr,int arrsize);
-void ExecHandler(char** arglist, int numofargs);
+void ExecHandler(char** arglist,int numofargs);
 
 int main(int argc, char *argv[])
 {
@@ -98,7 +98,8 @@ int GetNumofVals(char **initialarglist)
 	return valnum;
 }
 
-void AddVarstoArr(char** valsarr, char** initialarglist, int varcount,int offset)
+void AddVarstoArr(char** valsarr,char** initialarglist,
+	int varcount,int offset)
 {
 	
 	for(int i= 1;i<=varcount;i++)
