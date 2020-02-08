@@ -8,26 +8,59 @@ utility env.
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 extern char **environ;
+#define ARRSIZE 80
+
+
+int getnumofVars(char** initialarglist);
+void addargstoArr(char** argsarr, char** initialarglist, int varcount);
 
 int main(int argc, char *argv[])
 {
-	/*
-	First step is to see what we've been given
-	when env is called -- is there a -i? Is it 
-	blank? Are there additional values? Is there 
-	a program to be executed and does it need 
-	those values or is it being simply executed 
-	through env?
-	*/
-
+	//If env is called alone, simply display the env vars
 	if(argc == 1)
 	{
-		while(environ != 0)
+		while(*environ != 0)
 		{
 			printf("%s\n", *environ);
 			environ++;
 		}
+		return 0;
+	}
+
+	//Array to store env vals from argv, loop to get them 
+	int varcount;
+	varcount = getnumofVars(argv);
+	char** argsarr = (char **) malloc(sizeof(char *) * varcount);
+	addargstoArr(argsarr,argv,varcount);
+	return 0;
+
+}
+int getnumofVars(char **initialarglist)
+{
+	int varnum = 0, i=0;
+	while(initialarglist[i] != 0)
+	{
+		if(strchr(initialarglist[i],'=') == NULL)
+		{
+			i++;
+		}else
+		{
+			varnum++;
+			i++;
+		}
+	}
+	return varnum;
+}
+
+void addargstoArr(char** argsarr, char** initialarglist, int varcount)
+{
+	for(int i=1;i<=varcount;i++)
+	{
+		argsarr[i] =(char *) malloc(strlen(initialarglist[i])+1);
+		strcpy(argsarr[i],initialarglist[i]);
+		printf("%s\n",argsarr[i]);
 	}
 }
