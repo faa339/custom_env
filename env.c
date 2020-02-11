@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 		/*
 		In this case, we need to add the new name=val pairs to 
 		environ. We pass in 0 for offset here since theres no -i 
-		to skip. We also copy in argsarr elements into environ.
+		to skip. We also copy argsarr elements into environ.
 		*/
 		EnvChange(argv,valcount, environsize);
 		char** argsarr = (char **) malloc(sizeof(char *) * (valcount+1));
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 		
 		AddVarstoArr(argsarr,argv,valcount,0);
 		CopyValstoEnviron(argsarr,valcount,environsize);
-		FreeValsArr(argsarr,valcount);
+		FreeValsArr(argsarr,valcount); //We dont need argsarr anymore 
 
 		if(argv[valcount+1])
 		{
@@ -100,12 +100,14 @@ int main(int argc, char *argv[])
 
 void Errorhandle(void)
 {
+	//Function to simplify error checking -- if errno!=0, some function failed
 	if(errno != 0)
 	{
 		perror("Error");
 		exit(EXIT_FAILURE);
 	}	
 }
+
 void DisplayEnv(void)
 {
 	//This function prints all variables in environ
