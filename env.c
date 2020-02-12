@@ -7,7 +7,6 @@ the end of environ. Usage is:
 ./env [name=value]...[command [args]...]
 */
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -66,6 +65,7 @@ int main(int argc, char *argv[])
 			obtain the correct remaining number of arguments.
 			*/
 			ExecHandler(&argv[valcount+2],(argc-valcount-2));
+			FreeValsArr(argsarr,valcount);
 			Errorhandle(); //Reached if invalid command specified
 		}
 		DisplayEnv(); //If no arguments selected, simply display env
@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
 		{
 			//Same idea as check @ line 55
 			ExecHandler(&argv[valcount+1], (argc-valcount-1));
+			FreeValsArr(argsarr,valcount);
 			Errorhandle();
 		} 
 		DisplayEnv();
@@ -100,7 +101,7 @@ int main(int argc, char *argv[])
 
 void Errorhandle(void)
 {
-	//Function to simplify error checking -- if errno!=0, some function failed
+	//Function to simplify error checking
 	if(errno != 0)
 	{
 		perror("Error");
@@ -166,7 +167,8 @@ void EnvChange(char** argv, int valcount, int environsize)
 void AddVarstoArr(char** valsarr,char** initialarglist,
 	int varcount,int offset)
 {
-	//Copy vars in initialarglist to values array
+	//Copy vars in initialarglist to values array -- offset is determined
+	//by whether -i is present or not
 	for(int i= 1;i<=varcount;i++)
 	{
 		valsarr[i-1] =(char *) malloc(strlen(initialarglist[i+offset])+1);
@@ -182,7 +184,7 @@ int SizeChange(char** valsarr, int numvals)
 	int newsize = numvals;
 	for(int i=0;i<numvals;i++)
 	{
-		if((strcmp(valsarr[i],"~IN")) == 0)
+		if((strcmp(valsarr[i],"~")) == 0)
 			newsize--;
 	}
 	return newsize;
@@ -197,6 +199,7 @@ void CopyValstoEnviron(char** valsarr,int numofvals,int environsize)
 	*/
 	
 	int newsize = environsize + SizeChange(valsarr,numofvals);
+
 	char **newenviron =(char**) malloc(sizeof(char*)*(newsize+1));
 	Errorhandle();
 	newenviron[newsize] = 0;
@@ -208,7 +211,8 @@ void CopyValstoEnviron(char** valsarr,int numofvals,int environsize)
 	}
 	
 	int envcounter = environsize;
-	//Only copy val if string isnt in environ
+	//Only copy val if string isnt marked as ~IN
+
 	for(int j=0;j<numofvals;j++)
 	{
 		if((strcmp(valsarr[j],"~IN")) != 0)
@@ -248,6 +252,6 @@ void ExecHandler(char** arglist, int numofargs)
 		Errorhandle();
 		strcpy(execargs[i],arglist[i]);
 	}
-	execvpe(arglist[0],execargs,environ);
+	execvp(arglist[0],execargs);
 	Errorhandle();
 }
